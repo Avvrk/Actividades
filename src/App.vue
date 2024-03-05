@@ -1,23 +1,47 @@
 <script setup>
 import { ref } from "vue";
+import Swal from "sweetalert2";
 
 let actividad = ref("");
 let fecha = ref("");
 let check = ref("");
 let arr = ref([]);
 
+let fsDate;
+let hoy = new Date();
+hoy.setHours(0, 0, 0, 0);
+
 
 function agg() {
-  let checkk = check.value == true ? "Alta" : "Baja";
+  fsDate = new Date(fecha.value + "T00:00:00");
 
-  arr.value.push({
-    actividad: actividad.value,
-    checkk,
-    fecha: fecha.value
-  })
+  if (actividad.value == "") {
+    Swal.fire({
+			text: "La actividad esta vacia",
+			icon: "error",
+		});
+  } else if (fecha.value == "") {
+    Swal.fire({
+			text: "La fecha esta vacia",
+			icon: "error",
+		});
+  } else if(fsDate < hoy) {
+    Swal.fire({
+			text: "Ingrese una fecha valida",
+			icon: "warning",
+		});
+  } else {
+    let checkk = check.value == true ? "Alta" : "Baja";
 
-  actividad.value = "";
-  fecha.value = "";
+    arr.value.push({
+      actividad: actividad.value,
+      checkk,
+      fecha: fecha.value
+    })
+    
+    actividad.value = "";
+    fecha.value = "";
+  }
 }
 
 function ordenar() {
